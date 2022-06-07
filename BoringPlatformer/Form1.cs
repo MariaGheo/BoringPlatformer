@@ -15,11 +15,14 @@ namespace BoringPlatformer
     {
         //player
         Rectangle player = new Rectangle(290, 380, 20, 20);
-        const int playerXSpeed = 6;
+        const int playerXSpeed = 7;
         int playerYSpeed = 0;
 
         //platforms
         List<Rectangle> platform = new List<Rectangle>();
+
+        //end door
+        Rectangle doorRectangle = new Rectangle(615, 140, 30, 30);
 
         //player control variables
         bool wDown = false;
@@ -63,11 +66,16 @@ namespace BoringPlatformer
             gameTimer.Enabled = true;
             gameState = "running";
             score = 0;
+            jumpCounter = 0;
+            inAir = false;
 
             player.Location = new Point(290, 380);
 
             platform.Add(new Rectangle (0, 360, 180, 20));
-            platform.Add(new Rectangle(260, 360, 180, 20));
+            platform.Add(new Rectangle (260, 360, 180, 20));
+            platform.Add(new Rectangle (500, 300, 150, 20));
+            platform.Add(new Rectangle (330, 230, 80, 20));
+            platform.Add(new Rectangle (500, 170, 260, 20));
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -155,7 +163,7 @@ namespace BoringPlatformer
 
                 for (int i = 0; i < platform.Count; i++)
                 {
-                    if (player.X + player.Width > platform[i].X && player.X < platform[i].X + platform[i].Width && player.Y >= platform[i].Y && player.Y + jumpYSpeed[jumpCounter] >= platform[i].Y)
+                    if (player.X + player.Width > platform[i].X && player.X < platform[i].X + platform[i].Width && player.Y <= platform[i].Y && player.Y + jumpYSpeed[jumpCounter] >= platform[i].Y)
                     {
                         player.Y = platform[i].Y - player.Height;
                         inAir = false;
@@ -165,6 +173,7 @@ namespace BoringPlatformer
                 {
                     gameState = "over";
                     gameTimer.Enabled = false;
+                    platform.Clear();
                 }
             }
             
@@ -188,6 +197,9 @@ namespace BoringPlatformer
                 {
                     e.Graphics.FillRectangle(whiteBrush, platform[i]);
                 }
+
+                //draw end door
+                e.Graphics.FillRectangle(whiteBrush, doorRectangle);
             }
             else if (gameState == "over")
             {
