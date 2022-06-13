@@ -69,7 +69,7 @@ namespace BoringPlatformer
             jumpCounter = 0;
             inAir = false;
 
-            player.Location = new Point(290, 380);
+            player.Location = new Point(40, 340);
 
             platform.Add(new Rectangle (0, 360, 180, 20));
             platform.Add(new Rectangle (260, 360, 180, 20));
@@ -98,7 +98,7 @@ namespace BoringPlatformer
                     spaceDown = true;
                     break;
                 case Keys.Enter:
-                    if (gameState == "waiting" || gameState == "over")
+                    if (gameState == "waiting" || gameState == "over, died" || gameState == "over, won")
                     {
                         SoundPlayer confirmBeep = new SoundPlayer(Properties.Resources.confirmBeep);
                         confirmBeep.Play();
@@ -106,7 +106,7 @@ namespace BoringPlatformer
                     }
                     break;
                 case Keys.Escape:
-                    if (gameState == "waiting" || gameState == "over")
+                    if (gameState == "waiting" || gameState == "over, died" || gameState == "over, won")
                     {
                         Application.Exit();
                     }
@@ -171,9 +171,28 @@ namespace BoringPlatformer
                 }
                 if (player.Y > this.Height)
                 {
-                    gameState = "over";
+                    gameState = "over, died";
                     gameTimer.Enabled = false;
                     platform.Clear();
+                }
+            }
+            else
+            {
+                bool onPlatform = false;
+
+                for (int i = 0; i < platform.Count; i++)
+                {
+                    //for if the player is above the platform
+                    if (player.X + player.Width > platform[i].X && player.X < platform[i].X + platform[i].Width && player.Y == platform[i].Y - player.Height)
+                    {
+                        onPlatform = true;
+                    }
+                }
+                
+                if (!onPlatform)
+                {
+                    inAir = true;
+                    jumpCounter = 8;
                 }
             }
             
@@ -185,7 +204,7 @@ namespace BoringPlatformer
             if (gameState == "waiting")
             {
                 titleLabel.Text = "BORING PLATFORMER";
-                subtitleLabel.Text = "Press Enter to Start or Escape to Exit";
+                subtitleLabel.Text = "Press Enter to Start or Esc to Exit";
             }
             else if (gameState == "running")
             {
@@ -201,9 +220,18 @@ namespace BoringPlatformer
                 //draw end door
                 e.Graphics.FillRectangle(whiteBrush, doorRectangle);
             }
-            else if (gameState == "over")
+            else if (gameState == "over, died")
             {
-                titleLabel.Text = "titleLabel";
+                titleLabel.Text = "YOU DIED";
+                subtitleLabel.Text = "Press Enter to Try Again or Esc to Exit";
+
+                scoreLabel.Visible = false;
+                titleLabel.Visible = true;
+                subtitleLabel.Visible = true;
+            }
+            else if (gameState == "over, won")
+            {
+                titleLabel.Text = "Press Enter to Play Again or Esc to Exit";
                 subtitleLabel.Text = "subtitleLabel";
 
                 scoreLabel.Visible = false;
