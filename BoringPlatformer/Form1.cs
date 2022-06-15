@@ -200,10 +200,13 @@ namespace BoringPlatformer
             switch (gamesWon)
             {
                 case 1: //make the one platform a bit too far away to reach, add extra invisible rectangles
+
                     break;
                 case 2: //make the platforms start to fall once the player hops onto them
                     break;
                 case 3: //make the platforms move away from the player
+                    break;
+                case 4: //make the door teleport around
                     break;
             }
 
