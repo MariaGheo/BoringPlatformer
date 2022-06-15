@@ -16,13 +16,13 @@ namespace BoringPlatformer
         //player
         Rectangle player = new Rectangle(290, 380, 20, 20);
         const int playerXSpeed = 7;
-        int playerYSpeed = 0;
 
         //platforms
         List<Rectangle> platform = new List<Rectangle>();
 
         //end door
         Rectangle doorRectangle = new Rectangle(615, 140, 30, 30);
+        Rectangle doorEllipse = new Rectangle(615, 125, 30, 30);
 
         //player control variables
         bool wDown = false;
@@ -42,6 +42,7 @@ namespace BoringPlatformer
 
         int jumpCounter = 0;
         int score = 0;
+        int gamesWon = 0;
 
         //brush
         SolidBrush whiteBrush = new SolidBrush(Color.White);
@@ -74,7 +75,7 @@ namespace BoringPlatformer
             platform.Add(new Rectangle (0, 360, 180, 20));
             platform.Add(new Rectangle (260, 360, 180, 20));
             platform.Add(new Rectangle (500, 300, 150, 20));
-            platform.Add(new Rectangle (330, 230, 80, 20));
+            platform.Add(new Rectangle (340, 230, 80, 20));
             platform.Add(new Rectangle (500, 170, 260, 20));
         }
 
@@ -195,7 +196,23 @@ namespace BoringPlatformer
                     jumpCounter = 8;
                 }
             }
-            
+
+            switch (gamesWon)
+            {
+                case 1: //make the one platform a bit too far away to reach, add extra invisible rectangles
+                    break;
+                case 2: //make the platforms start to fall once the player hops onto them
+                    break;
+                case 3: //make the platforms move away from the player
+                    break;
+            }
+
+            //check if player reached end door
+            if (player.IntersectsWith(doorRectangle) || player.IntersectsWith(doorEllipse))
+            {
+                gameState = "over, won";
+            }
+
             Refresh();
         }
 
@@ -219,6 +236,7 @@ namespace BoringPlatformer
 
                 //draw end door
                 e.Graphics.FillRectangle(whiteBrush, doorRectangle);
+                e.Graphics.FillEllipse(whiteBrush, doorEllipse);
             }
             else if (gameState == "over, died")
             {
@@ -231,12 +249,14 @@ namespace BoringPlatformer
             }
             else if (gameState == "over, won")
             {
-                titleLabel.Text = "Press Enter to Play Again or Esc to Exit";
-                subtitleLabel.Text = "subtitleLabel";
+                titleLabel.Text = "YOU WON!!!";
+                subtitleLabel.Text = "Press Enter to Play Again or Esc to Exit";
 
                 scoreLabel.Visible = false;
                 titleLabel.Visible = true;
                 subtitleLabel.Visible = true;
+
+                gamesWon++;
             }
         }
     }
