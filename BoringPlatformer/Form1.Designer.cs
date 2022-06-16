@@ -46,7 +46,7 @@
             this.troubleshootLabel.AutoSize = true;
             this.troubleshootLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.troubleshootLabel.ForeColor = System.Drawing.Color.White;
-            this.troubleshootLabel.Location = new System.Drawing.Point(12, 106);
+            this.troubleshootLabel.Location = new System.Drawing.Point(518, 45);
             this.troubleshootLabel.Name = "troubleshootLabel";
             this.troubleshootLabel.Size = new System.Drawing.Size(160, 24);
             this.troubleshootLabel.TabIndex = 0;
@@ -67,9 +67,9 @@
             // 
             this.titleLabel.Font = new System.Drawing.Font("Consolas", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.titleLabel.ForeColor = System.Drawing.Color.White;
-            this.titleLabel.Location = new System.Drawing.Point(251, 144);
+            this.titleLabel.Location = new System.Drawing.Point(172, 143);
             this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Size = new System.Drawing.Size(250, 30);
+            this.titleLabel.Size = new System.Drawing.Size(402, 30);
             this.titleLabel.TabIndex = 2;
             this.titleLabel.Text = "titleLabel";
             this.titleLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;

@@ -72,11 +72,28 @@ namespace BoringPlatformer
 
             player.Location = new Point(40, 340);
 
-            platform.Add(new Rectangle (0, 360, 180, 20));
-            platform.Add(new Rectangle (260, 360, 180, 20));
-            platform.Add(new Rectangle (500, 300, 150, 20));
-            platform.Add(new Rectangle (340, 230, 80, 20));
-            platform.Add(new Rectangle (500, 170, 260, 20));
+            platform.Clear();
+
+            //platforms in order that they need to be jumped, except level-specific platforms (the ones that aren't in the first playthrough) are at the end
+            platform.Add(new Rectangle(0, 360, 180, 20));
+            platform.Add(new Rectangle(260, 360, 180, 20));
+            platform.Add(new Rectangle(500, 300, 150, 20));
+            platform.Add(new Rectangle(340, 230, 80, 20));
+
+            switch (gamesWon)
+            {
+                case 0:
+                    platform.Add(new Rectangle(500, 170, 260, 20));
+                    break;
+                case 1:
+                    platform.Add(new Rectangle(520, 160, 240, 20)); //platform that the door is on
+                    platform.Add(new Rectangle(0, 180, 280, 20)); //invisble platform 1
+                    platform.Add(new Rectangle(330, 115, 120, 20)); //invisible platform 2
+                    break;
+                default:
+                    platform.Add(new Rectangle(500, 170, 260, 20));
+                    break;
+            }
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -149,7 +166,7 @@ namespace BoringPlatformer
             {
                 player.X += playerXSpeed;
             }
-
+            
             if (spaceDown == true && inAir == false)
             {
                 player.Y += jumpYSpeed[0];
@@ -174,7 +191,6 @@ namespace BoringPlatformer
                 {
                     gameState = "over, died";
                     gameTimer.Enabled = false;
-                    platform.Clear();
                 }
             }
             else
@@ -202,11 +218,17 @@ namespace BoringPlatformer
                 case 1: //make the one platform a bit too far away to reach, add extra invisible rectangles
 
                     break;
-                case 2: //make the platforms start to fall once the player hops onto them
+                case 2: //make the play start where the door normally is, and make the door stay where the player normally is
                     break;
-                case 3: //make the platforms move away from the player
+                case 3: //make the door teleport around
                     break;
-                case 4: //make the door teleport around
+                case 4: //make the platforms start to fall once the player hops onto them
+                    break;
+                case 5: //make all the platforms invisible
+                    break;
+                case 6: //make the platforms move away from the player
+                    break;
+                case 7: //don't paint the door, make the player move to another screen
                     break;
             }
 
@@ -214,6 +236,8 @@ namespace BoringPlatformer
             if (player.IntersectsWith(doorRectangle) || player.IntersectsWith(doorEllipse))
             {
                 gameState = "over, won";
+                gameTimer.Enabled = false;
+                gamesWon++;
             }
 
             Refresh();
@@ -232,9 +256,19 @@ namespace BoringPlatformer
                 e.Graphics.FillRectangle(whiteBrush, player);
 
                 //draw platforms
-                for (int i = 0; i < platform.Count; i++)
+                if (gamesWon == 1)
                 {
-                    e.Graphics.FillRectangle(whiteBrush, platform[i]);
+                    for (int i = 0; i < 5; i++)
+                    {
+                        e.Graphics.FillRectangle(whiteBrush, platform[i]);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < platform.Count; i++)
+                    {
+                        e.Graphics.FillRectangle(whiteBrush, platform[i]);
+                    }
                 }
 
                 //draw end door
@@ -258,8 +292,6 @@ namespace BoringPlatformer
                 scoreLabel.Visible = false;
                 titleLabel.Visible = true;
                 subtitleLabel.Visible = true;
-
-                gamesWon++;
             }
         }
     }
