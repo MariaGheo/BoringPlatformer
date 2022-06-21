@@ -83,5 +83,20 @@
   <ItemGroup>
     <None Include="Resources\confirmBeep.wav" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\winBeep.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blip.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jumpBoing.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jumpBoing2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fall.wav" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

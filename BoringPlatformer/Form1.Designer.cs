@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
             this.troubleshootLabel = new System.Windows.Forms.Label();
-            this.scoreLabel = new System.Windows.Forms.Label();
+            this.levelLabel = new System.Windows.Forms.Label();
             this.titleLabel = new System.Windows.Forms.Label();
             this.subtitleLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -52,16 +52,16 @@
             this.troubleshootLabel.TabIndex = 0;
             this.troubleshootLabel.Text = "troubleshootLabel";
             // 
-            // scoreLabel
+            // levelLabel
             // 
-            this.scoreLabel.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.scoreLabel.ForeColor = System.Drawing.Color.White;
-            this.scoreLabel.Location = new System.Drawing.Point(302, 30);
-            this.scoreLabel.Name = "scoreLabel";
-            this.scoreLabel.Size = new System.Drawing.Size(160, 20);
-            this.scoreLabel.TabIndex = 1;
-            this.scoreLabel.Text = "scoreLabel";
-            this.scoreLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.levelLabel.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.levelLabel.ForeColor = System.Drawing.Color.White;
+            this.levelLabel.Location = new System.Drawing.Point(302, 30);
+            this.levelLabel.Name = "levelLabel";
+            this.levelLabel.Size = new System.Drawing.Size(160, 20);
+            this.levelLabel.TabIndex = 1;
+            this.levelLabel.Text = "levelLabel";
+            this.levelLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // titleLabel
             // 
@@ -78,9 +78,9 @@
             // 
             this.subtitleLabel.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleLabel.ForeColor = System.Drawing.Color.White;
-            this.subtitleLabel.Location = new System.Drawing.Point(174, 221);
+            this.subtitleLabel.Location = new System.Drawing.Point(108, 215);
             this.subtitleLabel.Name = "subtitleLabel";
-            this.subtitleLabel.Size = new System.Drawing.Size(400, 60);
+            this.subtitleLabel.Size = new System.Drawing.Size(527, 60);
             this.subtitleLabel.TabIndex = 3;
             this.subtitleLabel.Text = "subtitleLabel";
             this.subtitleLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -93,7 +93,7 @@
             this.ClientSize = new System.Drawing.Size(760, 400);
             this.Controls.Add(this.subtitleLabel);
             this.Controls.Add(this.titleLabel);
-            this.Controls.Add(this.scoreLabel);
+            this.Controls.Add(this.levelLabel);
             this.Controls.Add(this.troubleshootLabel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -112,7 +112,7 @@
 
         private System.Windows.Forms.Timer gameTimer;
         private System.Windows.Forms.Label troubleshootLabel;
-        private System.Windows.Forms.Label scoreLabel;
+        private System.Windows.Forms.Label levelLabel;
         private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.Label subtitleLabel;
     }
