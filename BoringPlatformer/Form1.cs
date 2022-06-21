@@ -25,9 +25,7 @@ namespace BoringPlatformer
         Rectangle doorEllipse = new Rectangle(615, 125, 30, 30);
 
         //player control variables
-        bool wDown = false;
         bool aDown = false;
-        bool sDown = false;
         bool dDown = false;
         bool spaceDown = false;
 
@@ -107,14 +105,8 @@ namespace BoringPlatformer
         {
             switch (e.KeyCode)
             {
-                case Keys.W:
-                    wDown = true;
-                    break;
                 case Keys.A:
                     aDown = true;
-                    break;
-                case Keys.S:
-                    sDown = true;
                     break;
                 case Keys.D:
                     dDown = true;
@@ -150,14 +142,8 @@ namespace BoringPlatformer
         {
             switch (e.KeyCode)
             {
-                case Keys.W:
-                    wDown = false;
-                    break;
                 case Keys.A:
                     aDown = false;
-                    break;
-                case Keys.S:
-                    sDown = false;
                     break;
                 case Keys.D:
                     dDown = false;
@@ -235,64 +221,67 @@ namespace BoringPlatformer
                 }
             }
 
-            switch (level)
+
+            /* list of ideas:
+             * 
+             * level 2: make the one platform a bit too far away to reach, add extra invisible rectangles (add score rectangle)
+             * 
+             * level 3: make the player start where the door normally is, and make the door stay where the player normally is
+             * 
+             * level 4: make the door teleport around
+             * 
+             * level 5: make the platforms fall once the player hops off of them
+             * 
+             * level 6: make all the platforms invisible
+             * 
+             * level 7: make the platforms move away from the player
+             * 
+             * level 8: don't paint the door, make the player move to another screen
+             */
+
+
+            if (level == 4)
             {
-                case 2: //make the one platform a bit too far away to reach, add extra invisible rectangles (add score rectangle)
-                    break;
-                case 3: //make the player start where the door normally is, and make the door stay where the player normally is
-                    break;
-                case 4: //make the door teleport around
-                    //rectangle to represent the future player position
-                    Rectangle futurePlayer = new Rectangle(player.X, player.Y, player.Width, player.Height);
+                Rectangle futurePlayer = new Rectangle(player.X, player.Y, player.Width, player.Height);
 
-                    //move the rectangle to the player's future position
-                    if (aDown == true && futurePlayer.X > 0)
+                //move the rectangle to the player's future position
+                if (aDown == true && futurePlayer.X > 0)
+                {
+                    futurePlayer.X -= playerXSpeed;
+                }
+
+                if (dDown == true && futurePlayer.X <= this.Width - futurePlayer.Width)
+                {
+                    futurePlayer.X += playerXSpeed;
+                }
+
+                if (inAir == true)
+                {
+                    futurePlayer.Y += jumpYSpeed[jumpCounter];
+
+                    for (int i = 0; i < platform.Count; i++)
                     {
-                        futurePlayer.X -= playerXSpeed;
-                    }
-
-                    if (dDown == true && futurePlayer.X <= this.Width - futurePlayer.Width)
-                    {
-                        futurePlayer.X += playerXSpeed;
-                    }
-
-                    if (inAir == true)
-                    {
-                        futurePlayer.Y += jumpYSpeed[jumpCounter];
-
-                        for (int i = 0; i < platform.Count; i++)
+                        if (futurePlayer.X + futurePlayer.Width > platform[i].X && futurePlayer.X < platform[i].X + platform[i].Width && futurePlayer.Y <= platform[i].Y && futurePlayer.Y + jumpYSpeed[jumpCounter] >= platform[i].Y)
                         {
-                            if (futurePlayer.X + futurePlayer.Width > platform[i].X && futurePlayer.X < platform[i].X + platform[i].Width && futurePlayer.Y <= platform[i].Y && futurePlayer.Y + jumpYSpeed[jumpCounter] >= platform[i].Y)
-                            {
-                                futurePlayer.Y = platform[i].Y - futurePlayer.Height;
-                            }
+                            futurePlayer.Y = platform[i].Y - futurePlayer.Height;
                         }
                     }
+                }
 
-                    //check if, during the next tick, the player will get to the door
-                    if (futurePlayer.IntersectsWith(doorRectangle) || futurePlayer.IntersectsWith(doorEllipse))
+                //check if, during the next tick, the player will get to the door
+                if (futurePlayer.IntersectsWith(doorRectangle) || futurePlayer.IntersectsWith(doorEllipse))
+                {
+                    if (doorRectangle.X == 615)
                     {
-                        if (doorRectangle.X == 615)
-                        {
-                            doorRectangle.Location = new Point(35, 330);
-                            doorEllipse.Location = new Point(35, 315);
-                        }
-                        else if (doorRectangle.X == 35)
-                        {
-                            doorRectangle.Location = new Point(340, platform[1].Y - 30);
-                            doorEllipse.Location = new Point(340, platform[1].Y - 45);
-                        }
+                        doorRectangle.Location = new Point(35, 330);
+                        doorEllipse.Location = new Point(35, 315);
                     }
-
-                    break;
-                case 5: //make the platforms start to fall once the player hops onto them
-                    break;
-                case 6: //make all the platforms invisible
-                    break;
-                case 7: //make the platforms move away from the player
-                    break;
-                case 8: //don't paint the door, make the player move to another screen
-                    break;
+                    else if (doorRectangle.X == 35)
+                    {
+                        doorRectangle.Location = new Point(340, platform[1].Y - 30);
+                        doorEllipse.Location = new Point(340, platform[1].Y - 45);
+                    }
+                }
             }
 
             //check if player reached end door
