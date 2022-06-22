@@ -1,30 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
-
-/* list of ideas:
- * 
- * level 2: make the one platform a bit too far away to reach, add extra invisible rectangles (add score rectangle)
- * 
- * level 3: make the player start where the door normally is, and make the door stay where the player normally is
- * 
- * level 4: make the door teleport around
- * 
- * level 5: make the platforms fall once the player hops off of them
- * 
- * level 6: make all the platforms invisible
- * 
- * Didn't do:
- * level 7: make the platforms move away from the player
- * level 8: don't paint the door, make the player move to another screen
- */
 
 namespace BoringPlatformer
 {
