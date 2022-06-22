@@ -9,6 +9,23 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Media;
 
+/* list of ideas:
+ * 
+ * level 2: make the one platform a bit too far away to reach, add extra invisible rectangles (add score rectangle)
+ * 
+ * level 3: make the player start where the door normally is, and make the door stay where the player normally is
+ * 
+ * level 4: make the door teleport around
+ * 
+ * level 5: make the platforms fall once the player hops off of them
+ * 
+ * level 6: make all the platforms invisible
+ * 
+ * Didn't do:
+ * level 7: make the platforms move away from the player
+ * level 8: don't paint the door, make the player move to another screen
+ */
+
 namespace BoringPlatformer
 {
     public partial class Form1 : Form
@@ -19,6 +36,7 @@ namespace BoringPlatformer
 
         //platforms
         List<Rectangle> platform = new List<Rectangle>();
+        List<int> platformFallCounter = new List<int>();
 
         //end door
         Rectangle doorRectangle = new Rectangle(615, 140, 30, 30);
@@ -33,10 +51,6 @@ namespace BoringPlatformer
         bool inAir = false;
 
         //jumping stuff
-        //made up numbers: List<int> jumpYSpeed = new List<int>(new int[] { -15, -10, -6, -3, -1, 0, 0, 0, 1, 3, 6, 10, 15 });
-        //made up numbers 2.0: List<int> jumpYSpeed = new List<int>(new int[] { -30, -25, -20, -16, -12, -9, -6, -4, -2, -1, 0, 1, 2, 4, 6, 9, 12, 16, 20, 25, 30 });
-        //parabola: List<int> jumpYSpeed = new List<int>(new int[] {-36, -25, -16, -9, -4, -1, 0, 1, 4, 9, 16, 25, 36, 49, 64 });
-        //List<int> jumpYSpeed = new List<int>(new int[] { -25, -18, -13, -9, -5, -2, -1, 0, 1, 2, 5, 9, 13, 18, 25, 32, 39, 45, 50, 54, 57, 59, 60, 60, 60, 60, 60, 60, 60, 60, 60 });
         List<int> jumpYSpeed = new List<int>(new int[] { -25, -18, -13, -9, -5, -2, -1, 0, 1, 2, 5, 9, 13, 18, 25, 32, 37, 40, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41 });
 
         int jumpCounter = 0;
@@ -60,7 +74,7 @@ namespace BoringPlatformer
             titleLabel.Visible = false;
             subtitleLabel.Visible = false;
             levelLabel.Visible = true;
-            levelLabel.Text = $"{level}";
+            levelLabel.Text = $"Level {level}";
 
             gameTimer.Enabled = true;
             gameState = "running";
@@ -68,6 +82,7 @@ namespace BoringPlatformer
             inAir = false;
 
             platform.Clear();
+            platformFallCounter.Clear();
 
             //platforms in order that they need to be jumped, except level-specific platforms (the ones that aren't in the first playthrough) are at the end
             platform.Add(new Rectangle(0, 360, 180, 20));
@@ -75,29 +90,49 @@ namespace BoringPlatformer
             platform.Add(new Rectangle(500, 300, 150, 20));
             platform.Add(new Rectangle(340, 230, 80, 20));
 
+            //change to if statement if more cases aren't added
             switch (level)
             {
                 case 2:
                     platform.Add(new Rectangle(520, 150, 240, 20)); //platform that the door is on
                     platform.Add(new Rectangle(0, 180, 280, 20)); //invisble platform 1
                     platform.Add(new Rectangle(330, 115, 120, 20)); //invisible platform 2
+
+                    //put the player and door in the right location
+                    player.Location = new Point(40, 340);
+                    doorRectangle.Location = new Point(615, platform[4].Y - 30);
+                    doorEllipse.Location = new Point(615, platform[4].Y - 45);
+                    break;
+                case 3:
+                    platform.Add(new Rectangle(500, 170, 260, 20)); //platform that the door is on
+
+                    //put the player and door in the right location
+                    player.Location = new Point(620, 150);
+                    doorRectangle.Location = new Point(35, 330);
+                    doorEllipse.Location = new Point(35, 315);
+                    break;
+                case 5:
+                    platform.Add(new Rectangle(500, 170, 260, 20)); //platform that the door is on
+
+                    //prep the counters for the platforms to fall
+                    for (int i = 0; i < platform.Count; i++)
+                    {
+                        platformFallCounter.Insert(i, 7);
+                    }
+
+                    //put the player and door in the right location
+                    player.Location = new Point(40, 340);
+                    doorRectangle.Location = new Point(615, platform[4].Y - 30);
+                    doorEllipse.Location = new Point(615, platform[4].Y - 45);
                     break;
                 default:
                     platform.Add(new Rectangle(500, 170, 260, 20));
-                    break;
-            }
 
-            if (level == 3)
-            {
-                player.Location = new Point(620, 150);
-                doorRectangle.Location = new Point(35, 330);
-                doorEllipse.Location = new Point(35, 315);
-            }
-            else
-            {
-                player.Location = new Point(40, 340);
-                doorRectangle.Location = new Point(615, platform[4].Y - 30);
-                doorEllipse.Location = new Point(615, platform[4].Y - 45);
+                    //put the player and door in the right location
+                    player.Location = new Point(40, 340);
+                    doorRectangle.Location = new Point(615, platform[4].Y - 30);
+                    doorEllipse.Location = new Point(615, platform[4].Y - 45);
+                    break;
             }
         }
 
@@ -125,6 +160,7 @@ namespace BoringPlatformer
                     {
                         SoundPlayer confirmBeep = new SoundPlayer(Properties.Resources.confirmBeep);
                         confirmBeep.Play();
+                        level = 1;
                         gameState = "waiting";
                         Refresh();
                     }
@@ -156,6 +192,29 @@ namespace BoringPlatformer
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            //make the platforms fall (needs to be done before the player moves)
+            if (level == 5)
+            {
+                for (int i = 0; i < platform.Count; i++)
+                {
+                    if (platformFallCounter[i] != 7)
+                    {
+                        //find the new y position of the platform
+                        int y = platform[i].Y + jumpYSpeed[platformFallCounter[i]];
+
+                        //replace the platform with a new platform in the right place
+                        platform[i] = new Rectangle(platform[i].X, y, platform[i].Width, platform[i].Height);
+
+                        if (platform[i].Y > this.Height + player.Height)
+                        {
+                            platformFallCounter[i] = 7;
+                        }
+
+                        platformFallCounter[i] = platformFallCounter[i] + 1;
+                    }
+                }
+            }
+
             //move the player
             if (aDown == true && player.X > 0)
             {
@@ -169,6 +228,20 @@ namespace BoringPlatformer
             
             if (spaceDown == true && inAir == false)
             {
+                //make the platform that the player is jumping off of start falling (if it's level 5)
+                if (level == 5)
+                {
+                    //find which platform the player is jumping off of, and then make that platform start falling
+                    for (int i = 0; i < platform.Count; i++)
+                    {
+                        //overly complicated if statement which just figures out if the player is on top of that platform
+                        if (player.X + player.Width > platform[i].X && player.X < platform[i].X + platform[i].Width && player.Y == platform[i].Y - player.Height)
+                        {
+                            platformFallCounter[i] = 8;
+                        }
+                    }
+                }
+                
                 player.Y += jumpYSpeed[0];
                 jumpCounter = 1;
                 inAir = true;
@@ -176,7 +249,7 @@ namespace BoringPlatformer
                 SoundPlayer jumpBoing = new SoundPlayer(Properties.Resources.jumpBoing);
                 jumpBoing.Play();
             }
-            else if (inAir == true)
+            else if (inAir == true) //code for when the player in jumping or falling
             {
                 player.Y += jumpYSpeed[jumpCounter];
                 jumpCounter++;
@@ -201,45 +274,25 @@ namespace BoringPlatformer
                     fall.Play();
                 }
             }
-            else
+            else //code to make the player start falling if they walk off the platform
             {
-                bool onPlatform = false;
-
                 for (int i = 0; i < platform.Count; i++)
                 {
                     //for if the player is above the platform
-                    if (player.X + player.Width > platform[i].X && player.X < platform[i].X + platform[i].Width && player.Y == platform[i].Y - player.Height)
+                    if (player.X + player.Width < platform[i].X || player.X > platform[i].X + platform[i].Width || player.Y != platform[i].Y - player.Height)
                     {
-                        onPlatform = true;
+                        inAir = true;
+                        jumpCounter = 8;
                     }
-                }
-                
-                if (!onPlatform)
-                {
-                    inAir = true;
-                    jumpCounter = 8;
+                    else
+                    {
+                        inAir = false;
+                        i = platform.Count;
+                    }
                 }
             }
 
-
-            /* list of ideas:
-             * 
-             * level 2: make the one platform a bit too far away to reach, add extra invisible rectangles (add score rectangle)
-             * 
-             * level 3: make the player start where the door normally is, and make the door stay where the player normally is
-             * 
-             * level 4: make the door teleport around
-             * 
-             * level 5: make the platforms fall once the player hops off of them
-             * 
-             * level 6: make all the platforms invisible
-             * 
-             * level 7: make the platforms move away from the player
-             * 
-             * level 8: don't paint the door, make the player move to another screen
-             */
-
-
+            //check if the player should reach the door in the next tick (needs to be done after the player moves)
             if (level == 4)
             {
                 Rectangle futurePlayer = new Rectangle(player.X, player.Y, player.Width, player.Height);
@@ -293,7 +346,7 @@ namespace BoringPlatformer
                 SoundPlayer winBeep = new SoundPlayer(Properties.Resources.winBeep);
                 winBeep.Play();
 
-                if (level == 5)
+                if (level == 7)
                 {
                     gameState = "over, complete";
                 }
@@ -322,7 +375,7 @@ namespace BoringPlatformer
                         e.Graphics.FillRectangle(whiteBrush, platform[i]);
                     }
                 }
-                else
+                else if (level != 6) //on level 6, none of the platforms are visible
                 {
                     for (int i = 0; i < platform.Count; i++)
                     {

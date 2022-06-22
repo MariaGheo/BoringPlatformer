@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
-            this.troubleshootLabel = new System.Windows.Forms.Label();
             this.levelLabel = new System.Windows.Forms.Label();
             this.titleLabel = new System.Windows.Forms.Label();
             this.subtitleLabel = new System.Windows.Forms.Label();
@@ -42,24 +41,13 @@
             this.gameTimer.Interval = 20;
             this.gameTimer.Tick += new System.EventHandler(this.gameTimer_Tick);
             // 
-            // troubleshootLabel
-            // 
-            this.troubleshootLabel.AutoSize = true;
-            this.troubleshootLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.troubleshootLabel.ForeColor = System.Drawing.Color.White;
-            this.troubleshootLabel.Location = new System.Drawing.Point(518, 45);
-            this.troubleshootLabel.Name = "troubleshootLabel";
-            this.troubleshootLabel.Size = new System.Drawing.Size(160, 24);
-            this.troubleshootLabel.TabIndex = 0;
-            this.troubleshootLabel.Text = "troubleshootLabel";
-            // 
             // levelLabel
             // 
             this.levelLabel.Font = new System.Drawing.Font("Consolas", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.levelLabel.ForeColor = System.Drawing.Color.White;
-            this.levelLabel.Location = new System.Drawing.Point(302, 30);
+            this.levelLabel.Location = new System.Drawing.Point(233, 27);
             this.levelLabel.Name = "levelLabel";
-            this.levelLabel.Size = new System.Drawing.Size(160, 20);
+            this.levelLabel.Size = new System.Drawing.Size(292, 20);
             this.levelLabel.TabIndex = 1;
             this.levelLabel.Text = "levelLabel";
             this.levelLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -95,7 +83,6 @@
             this.Controls.Add(this.subtitleLabel);
             this.Controls.Add(this.titleLabel);
             this.Controls.Add(this.levelLabel);
-            this.Controls.Add(this.troubleshootLabel);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -106,14 +93,12 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Timer gameTimer;
-        private System.Windows.Forms.Label troubleshootLabel;
         private System.Windows.Forms.Label levelLabel;
         private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.Label subtitleLabel;
